@@ -9,7 +9,9 @@ export default function FormService<T>(
   checkOnUpdate: Ref<boolean> = ref(true)
 ) {
   const initialValue = model.value;
-  const validator = computed(() => new Schema(rules.value));
+  const validator = computed(() =>
+    rules.value ? new Schema(rules.value) : { validate: () => {} }
+  );
   const errorList = ref<FieldErrorList>({});
   // if form item input has been touched
   const touched = ref<boolean>(false);
