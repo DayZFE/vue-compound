@@ -11,15 +11,9 @@ export default function InputService<T>(initialValue: T) {
     ["model", "value", name.value],
     initialValue
   );
-  const useInputErrorAndHint = Aggregation<boolean>(
-    FORM_ITEM_SERVICE_TOKEN,
-    ["useInputErrorAndHint", "value"],
-    false
-  );
   return {
     touch,
     name,
     model,
-    useInputErrorAndHint,
   };
 }

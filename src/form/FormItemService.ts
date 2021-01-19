@@ -15,15 +15,9 @@ export default function FormItemService(name: string) {
     ["errorList", "value", name],
     undefined
   );
-  const useInputErrorAndHint = ref(false);
-  // can this item show error
-  const canItemShowError = computed(
-    () => canShowError.value && !useInputErrorAndHint.value
-  );
-  provide(FORM_ITEM_SERVICE_TOKEN, { name, useInputErrorAndHint });
+  provide(FORM_ITEM_SERVICE_TOKEN, { name });
   return {
-    useInputErrorAndHint,
-    canItemShowError,
+    canShowError,
     errors,
   };
 }

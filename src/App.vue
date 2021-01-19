@@ -24,13 +24,6 @@ export default {
       }),
       ref({ name: [{ required: true, message: "this is requred" }] })
     );
-    watch(
-      formService.model,
-      (res) => {
-        console.log(res);
-      },
-      { deep: true }
-    );
     return { token: formService.token };
   },
 };

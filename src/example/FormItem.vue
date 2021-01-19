@@ -15,11 +15,11 @@ export default {
 
 <template>
   <div>{{ label }}</div>
-  <div v-if="!useInputErrorAndHint && hint">
+  <div v-if="hint">
     {{ hint }}
   </div>
   <slot></slot>
-  <div v-show="canItemShowError" style="color: red">
+  <div v-show="canShowError" style="color: red">
     {{ errors?.[0]?.message }}
   </div>
 </template>
