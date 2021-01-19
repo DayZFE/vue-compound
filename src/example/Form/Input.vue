@@ -1,6 +1,6 @@
 <script lang="ts">
 import { watch } from "vue";
-import InputService from "../form/InputService";
+import InputService from "src/form/InputService";
 export default {
   name: "example-input",
   props: { modelValue: String },

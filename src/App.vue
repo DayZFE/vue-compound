@@ -16,32 +16,39 @@ export default {
     "logic-sub-form": SubForm,
   },
   setup() {
+    const model = ref({
+      name: "",
+      test: "hahaha",
+      deep: [""],
+    });
     const formService = FormService(
-      ref({
-        name: "",
-        test: "hahaha",
-        deep: [""],
-      }),
+      model,
       ref({ name: [{ required: true, message: "this is requred" }] })
     );
-    return { token: formService.token };
+    watch(model, (res) => console.log(res), { deep: true });
+    return { token: formService.token, model };
   },
 };
 </script>
 <template>
   <logic-form :token="token">
-    <logic-form-item label="test" name="name">
+    <div>
+      <logic-form-item label="test" name="name">
+        <logic-input />
+      </logic-form-item>
+    </div>
+    <logic-form-item label="hahah" name="test">
       <logic-input />
     </logic-form-item>
     <logic-sub-form name="deep">
       <logic-form-item name="0">
-        <logic-input />
+        <div>
+          <logic-input />
+        </div>
       </logic-form-item>
     </logic-sub-form>
-    <logic-form-item label="hahah" name="hahaha">
-      <logic-input />
-    </logic-form-item>
   </logic-form>
+  <div>{{ model.test }}</div>
 </template>
 
 <style>

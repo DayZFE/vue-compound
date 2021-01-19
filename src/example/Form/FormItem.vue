@@ -2,7 +2,7 @@
 <script>
 import { watch } from "vue";
 import { Aggregation } from "vue-injection-helper";
-import FormItemService from "../form/FormItemService";
+import FormItemService from "src/form/FormItemService";
 export default {
   name: "example-form-item",
   props: { name: String, hint: String, label: String },

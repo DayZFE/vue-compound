@@ -1,7 +1,7 @@
 <script lang="ts">
 import { provide, ref } from "vue";
 import { Aggregation } from "vue-injection-helper";
-import FormService, { FORM_SERVICE_TOKEN } from "../form/FormService";
+import FormService, { FORM_SERVICE_TOKEN } from "src/form/FormService";
 export default {
   name: "example-subform",
   props: {

@@ -5,16 +5,17 @@ import {
   Aggregation,
   getMockInstance,
   getInjectionToken,
-  OptionalInjection,
+  OptionalInjectionModule,
 } from "vue-injection-helper";
-import FormService, { FORM_SERVICE_TOKEN } from "../form/FormService";
+import FormService, { FORM_SERVICE_TOKEN } from "src/form/FormService";
 export default {
   name: "example-form",
   props: { token: String },
   setup(props) {
-    const service = OptionalInjection(
+    const service = OptionalInjectionModule(
       FormService(ref({}), ref({})),
-      props.token || FORM_SERVICE_TOKEN
+      props.token || FORM_SERVICE_TOKEN,
+      true
     );
     // specify certain form
     provide(FORM_SERVICE_TOKEN, service);
