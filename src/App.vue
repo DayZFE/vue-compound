@@ -14,16 +14,16 @@ export default {
     "logic-input": Input,
   },
   setup() {
-    const formService = FormService(
-      ref({ name: "", test: "hahaha" }),
-      ref({ name: [{ required: true, message: "this is requred" }] })
-    );
-    return { token: formService.token };
+    // const formService = FormService(
+    //   ref({ name: "", test: "hahaha" }),
+    //   ref({ name: [{ required: true, message: "this is requred" }] })
+    // );
+    // return { token: formService.token };
   },
 };
 </script>
 <template>
-  <logic-form :token="token">
+  <logic-form>
     <div style="margin-bottom: 10px">
       <logic-form-item label="test" name="name">
         <logic-input />
