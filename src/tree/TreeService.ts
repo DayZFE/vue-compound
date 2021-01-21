@@ -19,4 +19,5 @@ export default function TreeService(
   key: string
 ) {
   // provide('logic-tree-'+layer+'key', )
+  return { test: "test" };
 }
