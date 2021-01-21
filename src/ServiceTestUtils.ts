@@ -1,13 +1,16 @@
 import { VueWrapper } from "@vue/test-utils";
-import { defineComponent, nextTick } from "vue";
+import { DefineComponent, defineComponent, nextTick } from "vue";
 
 export type ServiceFunc<T> = (...args: any[]) => T;
-export interface TestUnit<T> {
-  props: any[];
+export class TestUnit<T> {
   service: ServiceFunc<T>;
-  valueKeyList: (string | number)[];
-  eventKeyList: (string | number)[];
-  eventPropsList: any;
+  props: any[] = [];
+  valueKeyList: (string | number)[] = [];
+  eventKeyList: (string | number)[] = [];
+  eventPropsList: any = {};
+  constructor(service: ServiceFunc<T>) {
+    this.service = service;
+  }
 }
 
 export function checkValue(
@@ -59,3 +62,20 @@ export function getMockCompo<T>(testUnit: TestUnit<T>) {
     `,
   });
 }
+
+// export interface MockCompoMap {
+//   Compo: DefineComponent;
+//   children: MockCompoMap[];
+// }
+// export function mappingCompo(compoMap: MockCompoMap) {
+//   let layer = 0
+//   const Mapping = defineComponent({
+//     props: {layer:Number},
+//     component: [
+//       ["test-compo-layer-"+layer+"-" + Math.trunc(Math.random() * 100) + "-" + Date.now()]:this.Compo,
+//     ],
+//     template: `
+
+//     `,
+//   });
+// }
