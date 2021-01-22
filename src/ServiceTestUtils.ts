@@ -1,8 +1,12 @@
 import { VueWrapper } from "@vue/test-utils";
 import { defineComponent, nextTick } from "vue";
+import { default as VIH } from "vue-injection-helper";
+const set = VIH.set;
 
 // service function
 export type ServiceFunc<T> = (...args: any[]) => T;
+export type ServiceClass<T> = new (...args: any[]) => T;
+export type Service<T> = ServiceFunc<T> | ServiceClass<T>;
 
 /**
  * set up a test unit
@@ -12,12 +16,12 @@ export type ServiceFunc<T> = (...args: any[]) => T;
  * @template T
  */
 export class TestUnit<T> {
-  service: ServiceFunc<T>;
+  service: Service<T>;
   props: any[] = [];
   valueKeyList: (string | number)[] = [];
   eventKeyList: (string | number)[] = [];
   eventPropsList: any = {};
-  constructor(service: ServiceFunc<T>) {
+  constructor(service: Service<T>) {
     this.service = service;
   }
 }
@@ -75,7 +79,14 @@ export function getCompo<T>(
 ) {
   return defineComponent({
     setup() {
-      const result = testUnit.service(...testUnit.props);
+      let result: any;
+      if ((testUnit?.service as any)?.__proto__?.constructor) {
+        result = new (testUnit.service as any)(...testUnit.props);
+      } else if (testUnit?.service) {
+        result = (testUnit.service as any)(...testUnit.props);
+      } else {
+        throw new Error("please set a service function or class");
+      }
       const values = testUnit.valueKeyList.map((el) => [
         el,
         (result as any)[el],
@@ -85,12 +96,16 @@ export function getCompo<T>(
         (result as any)[el],
       ]);
       const strObj____ = (val: any) => JSON.stringify(val);
+      const setServiceValue = (keyPath: string[], value: any) => {
+        set(result as any, keyPath, value);
+      };
       return {
         layer,
         index,
         values,
         events,
         eventProps: testUnit.eventPropsList,
+        setServiceValue,
         strObj____,
       };
     },
@@ -99,6 +114,7 @@ export function getCompo<T>(
       <span v-for="item in values" :key="item[0]" :id="item[0]+(layer?'-'+layer:'')+(index?'-'+index:'')">{{item[1]?.value}}</span>
       <span v-for="item in values" :key="item[0]" :id="item[0]+'-obj'+(layer?'-'+layer:'')+(index?'-'+index:'')">{{strObj____(item[1]?.value)}}</span>
       <span v-for="item in events" :id="item[0]+(layer?'-'+layer:'')+(index?'-'+index:'')" @click="item[1](eventProps[item[0]])"></span>
+      <span :id="'setValue'+(layer?'-'+layer:'')+(index?'-'+index:'')" @click="setServiceValue(eventProps[item[0]])"></span>
       <slot></slot>
     </div>
     `,
