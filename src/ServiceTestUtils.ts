@@ -87,8 +87,8 @@ export function getCompo<T>(
         (result as any)[el],
       ]);
       const strObj____ = (val: any) => JSON.stringify(val);
-      const setServiceValue = (keyPath: string[], value: any) => {
-        set(result as any, keyPath, value);
+      const setServiceValue = (props: { keyPath: string[]; value: any }) => {
+        set(result as any, props.keyPath, props.value);
       };
       return {
         layer,
@@ -105,7 +105,7 @@ export function getCompo<T>(
       <span v-for="item in values" :key="item[0]" :id="item[0]+(layer?'-'+layer:'')+(index?'-'+index:'')">{{item[1]?.value}}</span>
       <span v-for="item in values" :key="item[0]" :id="item[0]+'-obj'+(layer?'-'+layer:'')+(index?'-'+index:'')">{{strObj____(item[1]?.value)}}</span>
       <span v-for="item in events" :id="item[0]+(layer?'-'+layer:'')+(index?'-'+index:'')" @click="item[1](eventProps[item[0]])"></span>
-      <span :id="'setValue'+(layer?'-'+layer:'')+(index?'-'+index:'')" @click="setServiceValue(eventProps[item[0]])"></span>
+      <span :id="'setValue'+(layer?'-'+layer:'')+(index?'-'+index:'')" @click="setServiceValue(eventProps['setValue'])"></span>
       <slot></slot>
     </div>
     `,

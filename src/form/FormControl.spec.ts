@@ -17,7 +17,7 @@ const Service = function () {
 
 const unit = new TestUnit(Service);
 unit.props = [];
-unit.valueKeyList = ["valid", "canShowError", "errorList", "touched"];
+unit.valueKeyList = ["valid", "errorList", "touched", "model"];
 unit.eventKeyList = ["touch", "validate"];
 unit.eventPropsList = { touch: "", validate: "" };
 
@@ -31,7 +31,7 @@ describe("FormControl", () => {
     expect(checkValue(wrapper, "touched")).toBe("false");
   });
   test("cant show error when constructed", () => {
-    expect(checkValue(wrapper, "canShowError")).toBe("false");
+    expect(checkValue(wrapper, "touched")).toBe("false");
   });
   test("when touch, touched will be true", async () => {
     await triggerEvent(wrapper, "touch");
@@ -39,6 +39,8 @@ describe("FormControl", () => {
   });
   test("when validate, error list will have contents", async () => {
     await triggerEvent(wrapper, "validate");
+    console.log(checkValue(wrapper, "model-obj"));
+    console.log(checkValue(wrapper, "errorList-obj"));
     expect(checkValue(wrapper, "errorList-obj").length).toBeGreaterThan(2);
   });
 });

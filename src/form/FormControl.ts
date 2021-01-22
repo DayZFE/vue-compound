@@ -1,4 +1,4 @@
-import { computed, Ref, ref } from "vue";
+import { computed, Ref, ref, watch } from "vue";
 import Schema, { FieldErrorList, Rules } from "async-validator";
 import { defineModule } from "vue-injection-helper";
 /**
@@ -17,12 +17,11 @@ export default function FormControl<T>(
   token: string = ""
 ) {
   const touched = ref<boolean>(false);
-  const focused = ref<boolean>(false);
+  const focusedKeyList = ref<string[]>([]);
   const valid = ref<boolean>(false);
   const disabled = ref<boolean>(false);
   const errorList = ref<FieldErrorList>({});
   const validator = computed(() => new Schema(rules ? rules.value : {}));
-  const canShowError = computed(() => !valid.value && touched.value);
   const touch = () => {
     touched.value = true;
   };
@@ -39,17 +38,20 @@ export default function FormControl<T>(
       });
     });
   };
+  const focused = computed(() => focusedKeyList.value.length > 0);
   const aggregation = {
+    model,
+    rules,
     touched,
     focused,
+    focusedKeyList,
     valid,
     disabled,
     errorList,
     validator,
-    canShowError,
     touch,
     validate,
   };
-  defineModule(aggregation, "logic-form-control", token);
+  defineModule(aggregation, "__logic-form-control", token);
   return aggregation;
 }
