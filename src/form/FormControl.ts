@@ -33,7 +33,7 @@ export default function FormControl<T>(
         if (errors) {
           errorList.value = fileds;
           valid.value = false;
-          //   rej(errors);
+          rej(errors);
         } else {
           valid.value = true;
           (res as any)();
