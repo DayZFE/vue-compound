@@ -1,7 +1,7 @@
 import { mount } from "@vue/test-utils";
 import {
   checkValue,
-  getMockCompo,
+  getCompo,
   TestUnit,
   triggerEvent,
 } from "./ServiceTestUtils";
@@ -13,7 +13,7 @@ unit.eventKeyList = ["changeTest"];
 unit.eventPropsList = { changeTest: null };
 
 describe("ExampleService", () => {
-  let mockCompo = getMockCompo(unit);
+  let mockCompo = getCompo(unit);
   let wrapper = mount(mockCompo);
   test("is a Vue instance", () => {
     expect(wrapper.exists()).toBeTruthy();

@@ -84,7 +84,7 @@ export default {
   // notifyMode: "failure-change",
 
   // A preset that is used as a base for Jest's configuration
-  // preset: undefined,
+  // preset: "",
 
   // Run tests from one or more projects
   // projects: undefined,
@@ -161,11 +161,14 @@ export default {
 
   // A map from regular expressions to paths to transformers
   transform: {
-    "^.+\\.tsx?$": "ts-jest",
+    "\\.jsx?$": "babel-jest",
+    "\\.tsx?$": "ts-jest",
   },
-
   // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
-  transformIgnorePatterns: ["/node_modules/", "\\.pnp\\.[^\\/]+$"],
+  // transformIgnorePatterns: ["/node_modules/", "\\.pnp\\.[^\\/]+$"],
+  transformIgnorePatterns: [
+    "<rootDir>/node_modules/(?!(lodash-es|vue-injection-helper))",
+  ],
 
   // An array of regexp pattern strings that are matched against all modules before the module loader will automatically return a mock for them
   // unmockedModulePathPatterns: undefined,
