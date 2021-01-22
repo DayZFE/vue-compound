@@ -3,7 +3,9 @@
     "target": "esnext",
     "module": "esnext",
     "moduleResolution": "node",
-    "baseUrl": ".",
+    "allowSyntheticDefaultImports": true,
+    "declarationDir": "esm",
+    "composite": true,
     "strict": true,
     "jsx": "preserve",
     "sourceMap": true,
@@ -13,7 +15,8 @@
     ],
     "types": [
       "vite/client",
-      "jest"
+      "jest",
+      "lodash"
     ],
     "plugins": [
       {

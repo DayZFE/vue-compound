@@ -1,25 +1,27 @@
 {
   "name": "vue-logic",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "author": "plightfield",
   "description": "🎁🎁🎁all the logic problem will be sovled🎁🎁🎁",
   "license": "MIT",
-  "main": "./esm/vue-logic.js",
-  "module": "./esm/vue-logic.js",
-  "types": "./esm/vue-logic.d.ts",
+  "main": "./esm/src/plugin.js",
+  "module": "./esm/src/plugin.js",
+  "types": "./esm/src/plugin.d.ts",
   "repository": "https://github.com/DayZFE/vue-logic.git",
   "scripts": {
     "test": "jest --watchAll",
-    "test-c": "jest --coverage"
+    "test-c": "jest --coverage",
+    "gen": "tsc --outDir esm"
   },
   "dependencies": {
     "vue": "^3.0.5",
-    "vue-injection-helper": "^1.1.5"
+    "vue-injection-helper": "^1.1.7"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",
     "@babel/preset-env": "^7.12.11",
     "@types/jest": "^26.0.20",
+    "@types/lodash": "^4.14.168",
     "@vitejs/plugin-vue": "^1.0.4",
     "@vue/compiler-sfc": "^3.0.5",
     "@vue/test-utils": "^2.0.0-beta.14",

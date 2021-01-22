@@ -77,12 +77,7 @@ export function getCompo<T>(
 ) {
   return defineComponent({
     setup() {
-      let result: any;
-      if (testUnit?.service) {
-        result = (testUnit.service as any)(...testUnit.props);
-      } else {
-        throw new Error("please set a service function or class");
-      }
+      const result = testUnit.service(...testUnit.props);
       const values = testUnit.valueKeyList.map((el) => [
         el,
         (result as any)[el],
