@@ -1,7 +1,6 @@
 import { computed, Ref, ref } from "vue";
 import Schema, { FieldErrorList, Rules } from "async-validator";
 import { defineModule } from "vue-injection-helper";
-
 /**
  * form control structure
  *
@@ -28,12 +27,11 @@ export default function FormControl<T>(
     touched.value = true;
   };
   const validate = () => {
-    return new Promise((res, rej) => {
+    return new Promise((res) => {
       validator.value.validate(model.value, {}, (errors, fileds) => {
         if (errors) {
           errorList.value = fileds;
           valid.value = false;
-          rej(errors);
         } else {
           valid.value = true;
           (res as any)();
