@@ -9,7 +9,7 @@
   "types": "./esm/vue-logic.d.ts",
   "repository": "https://github.com/DayZFE/vue-logic.git",
   "scripts": {
-    "test": "jest",
+    "test": "jest --watchAll",
     "test-c": "jest --coverage"
   },
   "dependencies": {

@@ -5,8 +5,6 @@ const set = VIH.set;
 
 // service function
 export type ServiceFunc<T> = (...args: any[]) => T;
-export type ServiceClass<T> = new (...args: any[]) => T;
-export type Service<T> = ServiceFunc<T> | ServiceClass<T>;
 
 /**
  * set up a test unit
@@ -16,12 +14,12 @@ export type Service<T> = ServiceFunc<T> | ServiceClass<T>;
  * @template T
  */
 export class TestUnit<T> {
-  service: Service<T>;
+  service: ServiceFunc<T>;
   props: any[] = [];
   valueKeyList: (string | number)[] = [];
   eventKeyList: (string | number)[] = [];
   eventPropsList: any = {};
-  constructor(service: Service<T>) {
+  constructor(service: ServiceFunc<T>) {
     this.service = service;
   }
 }
@@ -80,9 +78,7 @@ export function getCompo<T>(
   return defineComponent({
     setup() {
       let result: any;
-      if ((testUnit?.service as any)?.__proto__?.constructor) {
-        result = new (testUnit.service as any)(...testUnit.props);
-      } else if (testUnit?.service) {
+      if (testUnit?.service) {
         result = (testUnit.service as any)(...testUnit.props);
       } else {
         throw new Error("please set a service function or class");
