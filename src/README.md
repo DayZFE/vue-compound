@@ -3,7 +3,9 @@
 ### 测试单元参数： TestUnit
 
 > props: any[] 服务参数列表
+
 > eventPropsList: {[key:string]:any} 事件参数列表
+
 > 服务事件保证单一参数（复合数据通过对象传递）
 
 ```Typescript
@@ -15,9 +17,13 @@ unit.eventPropsList = ['default',{name:'',password:''}]
 ### 生成测试组件
 
 > 不同方法生成的测试组件，只有一个
+
 > 单一组件 -> getCompo
+
 > 嵌套组件 -> getCompoNested
+
 > 嵌套分形组件 -> getCompoMapping
+
 > 通过 xxx-layer-index 访问服务内容
 
 ```Typescript
