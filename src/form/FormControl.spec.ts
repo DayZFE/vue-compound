@@ -16,8 +16,6 @@ const Service = function () {
 };
 
 const unit = new TestUnit(Service);
-unit.props = [];
-unit.eventPropsList = { touch: "", validate: "" };
 
 describe("FormControl", () => {
   let mockCompo = getCompo(unit);

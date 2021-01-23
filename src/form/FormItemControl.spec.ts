@@ -17,7 +17,6 @@ const FormService = function () {
 };
 
 const rootUnit = new TestUnit(FormService);
-rootUnit.props = [];
 
 const leafUnit = new TestUnit(FormItemControl);
 leafUnit.props = [["name"], "test default"];
