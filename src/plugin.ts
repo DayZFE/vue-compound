@@ -1,5 +1,5 @@
 import { Plugin } from "vue";
-import FormControl from "./form/FormControl";
+import FormControl from "./structure/form/FormControl";
 
 export const LogicFormControl = FormControl;
 

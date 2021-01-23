@@ -5,7 +5,7 @@ import {
   getCompo,
   checkValue,
   triggerEvent,
-} from "../ServiceTestUtils";
+} from "../../ServiceTestUtils";
 import FormControl from "./FormControl";
 
 const Service = function () {
