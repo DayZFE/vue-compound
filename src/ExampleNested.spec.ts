@@ -8,13 +8,9 @@ import {
 import { RootService, LeafService } from "./ExampleNestedService";
 
 const rootUnit = new TestUnit(RootService);
-rootUnit.valueKeyList = ["test", "test2"];
-rootUnit.eventKeyList = ["changeTest"];
 rootUnit.eventPropsList = { changeTest: null };
 
 const leafUnit = new TestUnit(LeafService);
-leafUnit.valueKeyList = ["test"];
-leafUnit.eventKeyList = ["changeTest"];
 leafUnit.eventPropsList = { changeTest: null };
 
 describe("ExampleService", () => {

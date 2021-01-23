@@ -8,8 +8,6 @@ import {
 import ExampleService from "./ExampleService";
 
 const unit = new TestUnit(ExampleService);
-unit.valueKeyList = ["test"];
-unit.eventKeyList = ["changeTest"];
 unit.eventPropsList = { changeTest: null };
 
 describe("ExampleService", () => {

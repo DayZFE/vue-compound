@@ -17,8 +17,6 @@ const Service = function () {
 
 const unit = new TestUnit(Service);
 unit.props = [];
-unit.valueKeyList = ["valid", "errorList", "touched", "model"];
-unit.eventKeyList = ["touch", "validate"];
 unit.eventPropsList = { touch: "", validate: "" };
 
 describe("FormControl", () => {

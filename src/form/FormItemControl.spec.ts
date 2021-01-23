@@ -2,7 +2,6 @@ import { mount } from "@vue/test-utils";
 import { ref, nextTick } from "vue";
 import {
   TestUnit,
-  getCompo,
   checkValue,
   triggerEvent,
   getCompoNested,
@@ -19,12 +18,9 @@ const FormService = function () {
 
 const rootUnit = new TestUnit(FormService);
 rootUnit.props = [];
-rootUnit.valueKeyList = ["valid", "errorList", "touched"];
-rootUnit.eventKeyList = ["touch", "validate"];
 
 const leafUnit = new TestUnit(FormItemControl);
 leafUnit.props = [["name"], "test default"];
-leafUnit.valueKeyList = ["touched", "errors", "model"];
 
 describe("FormControl", () => {
   let mockCompo = getCompoNested(rootUnit, leafUnit);

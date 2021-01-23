@@ -1,5 +1,5 @@
 import { VueWrapper } from "@vue/test-utils";
-import { defineComponent, nextTick } from "vue";
+import { defineComponent, isRef, nextTick } from "vue";
 import { default as VIH } from "vue-injection-helper";
 const set = VIH.set;
 
@@ -16,8 +16,6 @@ export type ServiceFunc<T> = (...args: any[]) => T;
 export class TestUnit<T> {
   service: ServiceFunc<T>;
   props: any[] = [];
-  valueKeyList: (string | number)[] = [];
-  eventKeyList: (string | number)[] = [];
   eventPropsList: any = {};
   constructor(service: ServiceFunc<T>) {
     this.service = service;
@@ -78,18 +76,19 @@ export function getCompo<T>(
   return defineComponent({
     setup() {
       const result = testUnit.service(...testUnit.props);
-      const values = testUnit.valueKeyList.map((el) => [
-        el,
-        (result as any)[el],
-      ]);
-      const events = testUnit.eventKeyList.map((el) => [
-        el,
-        (result as any)[el],
-      ]);
       const strObj____ = (val: any) => JSON.stringify(val);
       const setServiceValue = (props: { keyPath: string[]; value: any }) => {
         set(result as any, props.keyPath, props.value);
       };
+      const values: any[] = [];
+      const events: any[] = [];
+      for (let key of Object.keys(result)) {
+        if (isRef((result as any)[key])) {
+          values.push([key, (result as any)[key]]);
+        } else {
+          events.push([key, (result as any)[key]]);
+        }
+      }
       return {
         layer,
         index,
