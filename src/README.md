@@ -11,7 +11,7 @@
 ```Typescript
 const unit = new TestUnit(Service)
 unit.props = ['prop1','prop2']
-unit.eventPropsList = ['default',{name:'',password:''}]
+unit.eventPropsList = ['someEvent',{name:'',password:''}]
 ```
 
 ### 生成测试组件
