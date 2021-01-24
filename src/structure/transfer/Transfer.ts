@@ -1,44 +1,48 @@
 import { computed, Ref, shallowRef } from "vue";
-import { aggregateRef, defineModule, LinkToken } from "vue-injection-helper";
-import { Collection } from "../collection/Collection";
+import { defineModule } from "vue-injection-helper";
+import { Selection, TrackBy, TrackingKey } from "../selection";
 
-type TrackKey = (string | number);
-
-export type TrackBy<T> = (this: void, data: T) => TrackKey;
-
+/**
+ * Create a Transfer logic
+ * Transfer has two arrays of items.
+ * They are splited by a array of keys. 
+ * The one is left items which not contain keys.
+ * The other is right items which contain keys.
+ * @param {Ref<T[]>} dataSource 
+ * @param {TrackBy<T>} trackBy 
+ */
 export function Transfer<T>(
   dataSource: Ref<T[]>, 
   trackBy: TrackBy<T>,
-  token: LinkToken = '',
 ) {
 
-  
-  const targetKeys = shallowRef<TrackKey[]>([]);
+  const targetKeys = shallowRef<TrackingKey[]>([]);
 
   const leftItems = computed(() => {
     return dataSource.value.filter((data) => {
-      return !targetKeys.value.includes(trackBy(data));
+      const key = trackBy(data);
+      return !targetKeys.value.includes(key);
     });
   });
 
   const rightItems = computed(() => {
     return dataSource.value.filter((data) => {
-      return targetKeys.value.includes(trackBy(data));
+      const key = trackBy(data);
+      return targetKeys.value.includes(key);
     });
   });
 
-  const left = Collection({dataSource: leftItems, trackBy, token: '__logic-transfer-left', multiple: true});
-  const right = Collection({dataSource: rightItems, trackBy, token: '__logic-transfer-right', multiple: true});
-
+  // use selection
+  const left = Selection({dataSource: leftItems, trackBy, multiple: true});
+  const right = Selection({dataSource: rightItems, trackBy, multiple: true});
   
   const addTo = (direction: 'left' | 'right') => {
+    const keys = targetKeys.value;
     if (direction === 'left') {
       const rightValues = right.selectedKeys.value;
-      targetKeys.value = targetKeys.value.filter((key) => {
-        return rightValues.indexOf(key) === -1;
-      });
+      targetKeys.value = keys.filter((key) => !rightValues.includes(key));
     } else {
-      targetKeys.value = Array.from(new Set([...left.selectedKeys.value, ...targetKeys.value]));
+      targetKeys.value = Array.from(new Set([...left.selectedKeys.value, ...keys]));
     }
   };
 
@@ -49,7 +53,7 @@ export function Transfer<T>(
     left,
     right
   }
-  defineModule(aggregation, '__logic-transfer', token);
+  defineModule(aggregation, '__logic-transfer');
 
   return aggregation;
 }
