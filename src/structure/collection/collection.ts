@@ -1,12 +1,13 @@
 import { Ref, shallowRef, watch } from "vue";
-import { defineModule } from "vue-injection-helper";
+import { defineModule, LinkToken } from "vue-injection-helper";
 import { TrackBy, TrackingKey } from "./types";
 
+export const COLLECTION_TOKEN = Symbol();
 
 interface CollectionParameters<T, Multiple extends boolean> {
   dataSource: Ref<T[]>;
   trackBy: TrackBy<T>;
-  token?: string;
+  token?: LinkToken;
   multiple?: Multiple;
 }
 
@@ -43,10 +44,10 @@ function createSelectKeys<T, Multiple extends boolean>(
  * 
  * @param {T} parameters.dataSource
  * @param {TrackBy} parameters.trackBy
- * @param {string} [parameters.token = '']
+ * @param {LinkToken} [parameters.token = '']
  * @param {boolean} [parameters.multiple = false]
  */
-export function collection<T, Multiple extends boolean = false>(
+export function Collection<T, Multiple extends boolean = false>(
   this: void, 
   parameters: CollectionParameters<T, Multiple>
 ) {
@@ -68,12 +69,18 @@ export function collection<T, Multiple extends boolean = false>(
     selectedKeys.value = selectedKeys.value.filter((key) => !toDeselectKeys.includes(key));
   }
 
+  const isSelected = (item: T) => {
+    const key = trackBy(item);
+    return selectedKeys.value.includes(key);
+  }
+
   const aggregation = {
     selectedKeys,
     select,
-    deselect
+    deselect,
+    isSelected
   }
 
-  defineModule(aggregation, '__$collection', token);
+  defineModule(aggregation, COLLECTION_TOKEN, token);
   return aggregation;
 }
