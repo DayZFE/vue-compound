@@ -1,7 +1,7 @@
 import { mount } from "@vue/test-utils";
 import { ref, nextTick } from "vue";
 import {
-  TestUnit,
+  getUnit,
   checkValue,
   triggerEvent,
   getCompoNested,
@@ -9,17 +9,15 @@ import {
 import FormControl from "./FormControl";
 import FormItemControl from "./FormItemControl";
 
-const FormService = function () {
+const FormFormula = function () {
   return FormControl(
     ref({ name: "", password: "" }),
     ref({ name: { required: true, message: "必填" } })
   );
 };
 
-const rootUnit = new TestUnit(FormService);
-
-const leafUnit = new TestUnit(FormItemControl);
-leafUnit.props = [["name"], "test default"];
+const rootUnit = getUnit(FormFormula, [], {});
+const leafUnit = getUnit(FormItemControl, [["name"], "test default"], {});
 
 describe("FormControl", () => {
   let mockCompo = getCompoNested(rootUnit, leafUnit);

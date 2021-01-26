@@ -1,5 +1,6 @@
 import { ref, watch } from "vue";
-import { aggregateEvent, aggregateRef } from "vue-injection-helper";
+import { bond, definePoly } from "vue-poly";
+import { ValidateError } from "async-validator";
 
 /**
  * input control
@@ -11,48 +12,51 @@ import { aggregateEvent, aggregateRef } from "vue-injection-helper";
  */
 export default function InputControl(defaultValue?: any, token?: string) {
   const usedToken = token || "__logic-form-control";
-  const keyList = aggregateRef("__logic-form-item-control", ["keyList"], []);
-  const aggregation = {
-    model: aggregateRef(
-      usedToken,
-      ["model", "value", ...keyList.value],
-      undefined as any
-    ),
-    errors: aggregateRef(
-      usedToken,
-      ["errorList", "value", ...keyList.value],
-      []
-    ),
-    disabled: aggregateRef(usedToken, ["disabled", "value"], false),
-    touched: aggregateRef(usedToken, ["touched", "value"], false),
-    touch: aggregateEvent(usedToken, ["touch"]),
-    focusedKeyList: aggregateRef(
+  const keyList = bond("__logic-form-item-control", ["keyList"], []);
+  const errors = bond(
+    "__logic-form-item-control",
+    ["errors", "value"],
+    ref<ValidateError[]>([])
+  );
+  const partial = {
+    model: bond(usedToken, ["model", "value", ...keyList], ref<any>(null)),
+    disabled: bond(usedToken, ["disabled", "value"], ref(false)),
+    touched: bond(usedToken, ["touched", "value"], ref(false)),
+    touch: bond(usedToken, "touch", () => {}),
+    focusedKeyList: bond(
       usedToken,
       ["focusedKeyList", "value"],
-      [] as string[]
+      ref<string[]>([])
     ),
   };
   // default value is superior than all
   if (defaultValue !== undefined) {
-    aggregation.model.value = defaultValue;
+    partial.model.value = defaultValue;
   }
   // independent focused
   const focused = ref(false);
   // focus when touch and set focusedKey
   const focus = () => {
     focused.value = true;
-    aggregation.touch();
-    const value = keyList.value.join("-");
-    const exist = aggregation.focusedKeyList.value.find((el) => el === value);
-    if (!exist) aggregation.focusedKeyList.value.push(value);
+    partial.touch();
+    const value = keyList.join("-");
+    const exist = partial.focusedKeyList.value.find((el: any) => el === value);
+    if (!exist) partial.focusedKeyList.value.push(value);
   };
 
   const blur = () => {
     focused.value = false;
-    aggregation.focusedKeyList.value = aggregation.focusedKeyList.value.filter(
-      (el) => el !== keyList.value.join("-")
+    partial.focusedKeyList.value = partial.focusedKeyList.value.filter(
+      (el: any) => el !== keyList.join("-")
     );
   };
 
-  return { ...aggregation, focused, focus, blur };
+  return definePoly({
+    id: "__form-input",
+    ...partial,
+    focused,
+    focus,
+    blur,
+    errors,
+  });
 }

@@ -1,21 +1,21 @@
 import { mount } from "@vue/test-utils";
 import { ref } from "vue";
 import {
-  TestUnit,
+  getUnit,
   getCompo,
   checkValue,
   triggerEvent,
 } from "../../ServiceTestUtils";
 import FormControl from "./FormControl";
 
-const Service = function () {
+const Formula = function () {
   return FormControl(
     ref({ name: "", password: "" }),
     ref({ name: { required: true, message: "必填" } })
   );
 };
 
-const unit = new TestUnit(Service);
+const unit = getUnit(Formula, [], {});
 
 describe("FormControl", () => {
   let mockCompo = getCompo(unit);

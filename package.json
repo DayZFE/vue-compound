@@ -11,12 +11,14 @@
   "scripts": {
     "test": "jest --watchAll",
     "test-c": "jest --coverage",
+    "test-a": "jest ./src/structure/form/InputControl.spec.ts",
     "gen": "tsc --outDir esm"
   },
   "dependencies": {
     "lodash": "^4.17.20",
     "vue": "^3.0.5",
-    "vue-injection-helper": "^1.1.8"
+    "vue-injection-helper": "^1.1.8",
+    "vue-poly": "^1.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",

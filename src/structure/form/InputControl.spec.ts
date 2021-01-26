@@ -1,29 +1,28 @@
 import { mount } from "@vue/test-utils";
 import { ref, nextTick } from "vue";
 import {
-  TestUnit,
+  getUnit,
   checkValue,
   triggerEvent,
   getCompoNested,
+  wait,
 } from "../../ServiceTestUtils";
 import FormControl from "./FormControl";
 import FormItemControl from "./FormItemControl";
 import InputControl from "./InputControl";
 
-const FormService = function () {
+const FormFormula = function () {
   return FormControl(
     ref({ name: "", password: "" }),
     ref({ name: { required: true, message: "必填" } })
   );
 };
 
-const rootUnit = new TestUnit(FormService);
+const rootUnit = getUnit(FormFormula, [], {});
 
-const middleUnit = new TestUnit(FormItemControl);
-middleUnit.props = [["name"], "test default"];
+const middleUnit = getUnit(FormItemControl, [["name"], "test default"], {});
 
-const leafUnit = new TestUnit(InputControl);
-leafUnit.props = ["input default"];
+const leafUnit = getUnit(InputControl, ["input default"], {});
 
 describe("FormControl", () => {
   let mockCompo = getCompoNested(rootUnit, middleUnit, leafUnit);
@@ -38,18 +37,22 @@ describe("FormControl", () => {
     await nextTick();
     expect(checkValue(wrapper, "model-2")).toBe("input default");
   });
+  test("bondations should be 9", async () => {
+    await wait(2);
+    expect(checkValue(wrapper, "bondLength")).toBe("8");
+  });
   test("after focus,  touched true", async () => {
     await triggerEvent(wrapper, "focus-2");
     expect(checkValue(wrapper, "touched-2")).toBe("true");
     expect(checkValue(wrapper, "focused-2")).toBe("true");
     await triggerEvent(wrapper, "validate");
-    expect(checkValue(wrapper, "errors-2").length).toBeLessThan(3);
-    leafUnit.eventPropsList["setValue"] = {
-      keyPath: ["model", "value"],
+    expect(checkValue(wrapper, "errors-obj-2").length).toBeLessThan(3);
+    leafUnit.eventProps["setPolyValue"] = {
+      queryPath: ["model", "value"],
       value: "",
     };
     await triggerEvent(wrapper, "setValue-2");
     await triggerEvent(wrapper, "validate");
-    expect(checkValue(wrapper, "errors-2").length).toBeGreaterThan(3);
+    expect(checkValue(wrapper, "errors-obj-2").length).toBeGreaterThan(3);
   });
 });

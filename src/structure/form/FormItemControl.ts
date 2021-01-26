@@ -1,4 +1,6 @@
-import { aggregateRef, defineModule } from "vue-injection-helper";
+import { FieldErrorList } from "async-validator";
+import { computed, ref } from "vue";
+import { definePoly, bond, bondGet } from "vue-poly";
 
 /**
  * form item controll
@@ -16,19 +18,27 @@ export default function FormItemControl(
   token?: string
 ) {
   const usedToken = token || "__logic-form-control";
-  const aggregation = {
-    errors: aggregateRef(usedToken, ["errorList", "value", ...keyList], []),
-    touched: aggregateRef(usedToken, ["touched", "value"], false),
-    model: aggregateRef(
+  const partial = {
+    errorsList: bond(
       usedToken,
-      ["model", "value", ...keyList],
-      undefined as any
+      ["errorList", "value"],
+      ref<FieldErrorList>({})
     ),
+    touched: bond(usedToken, ["touched", "value"], ref(false)),
+    model: bond(usedToken, ["model", "value", ...keyList], ref<any>(null)),
   };
+  // need to handle all the undefined
+  const errors = computed(
+    () => bondGet(partial.errorsList, ["value", ...keyList]) || []
+  );
   // default value is superior than form model
   if (defaultValue !== undefined) {
-    aggregation.model.value = defaultValue;
+    partial.model.value = defaultValue;
   }
-  defineModule({ keyList }, "__logic-form-item-control");
-  return aggregation;
+  return definePoly({
+    id: "__logic-form-item-control",
+    keyList,
+    ...partial,
+    errors,
+  });
 }

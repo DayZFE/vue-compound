@@ -1,26 +1,16 @@
 import { VueWrapper } from "@vue/test-utils";
-import { defineComponent, isRef, nextTick } from "vue";
-import { default as VIH } from "vue-injection-helper";
-const set = VIH.set;
-
+import {
+  computed,
+  defineComponent,
+  isRef,
+  nextTick,
+  ref,
+  watch,
+  watchEffect,
+} from "vue";
+import { bondSet, watchPoly, QueryPath, cataly, bondGet } from "vue-poly";
 // service function
 export type ServiceFunc<T> = (...args: any[]) => T;
-
-/**
- * set up a test unit
- *
- * @export
- * @class TestUnit
- * @template T
- */
-export class TestUnit<T> {
-  service: ServiceFunc<T>;
-  props: any[] = [];
-  eventPropsList: any = {};
-  constructor(service: ServiceFunc<T>) {
-    this.service = service;
-  }
-}
 
 /**
  * check the ref value
@@ -58,6 +48,15 @@ export async function triggerEvent(
   }
 }
 
+export function getUnit(
+  formula: any,
+  formulaProps: any[],
+  eventProps: { [key: string]: any }
+) {
+  return { formula, formulaProps, eventProps };
+}
+const mockUnit = cataly(getUnit);
+
 /**
  * get component of certain test unit
  *
@@ -69,42 +68,55 @@ export async function triggerEvent(
  * @returns
  */
 export function getCompo<T>(
-  testUnit: TestUnit<T>,
+  unit: typeof mockUnit,
   layer: number = 0,
   index: number = 0
 ) {
   return defineComponent({
     setup() {
-      const result = testUnit.service(...testUnit.props);
-      const strObj____ = (val: any) => JSON.stringify(val);
-      const setServiceValue = (props: { keyPath: string[]; value: any }) => {
-        set(result as any, props.keyPath, props.value);
-      };
+      const poly = unit.formula(...(unit.formulaProps || []));
+      const eventProps = unit.eventProps || {};
       const values: any[] = [];
       const events: any[] = [];
-      for (let key of Object.keys(result)) {
-        if (isRef((result as any)[key])) {
-          values.push([key, (result as any)[key]]);
+      for (let key of Object.keys(poly)) {
+        if (typeof poly[key] === "function") {
+          events.push([key, poly[key]]);
         } else {
-          events.push([key, (result as any)[key]]);
+          values.push([key, poly[key]]);
         }
       }
+      const bondLength = ref(0);
+      const frozen = ref(false);
+      watchPoly(poly, (res) => {
+        bondLength.value = res.bondList.length;
+        frozen.value = res.frozen;
+      });
+      const setPolyValue = (prop: { queryPath: QueryPath; value: any }) => {
+        bondSet(poly, prop.queryPath, prop.value);
+      };
+      const getValue__ = (val: any) => (isRef(val) ? val.value : val);
+      const getStrValue__ = (val: any) => JSON.stringify(getValue__(val));
       return {
         layer,
         index,
         values,
         events,
-        eventProps: testUnit.eventPropsList,
-        setServiceValue,
-        strObj____,
+        eventProps,
+        bondLength,
+        frozen,
+        setPolyValue,
+        getValue__,
+        getStrValue__,
       };
     },
     template: `
     <div>
-      <span v-for="item in values" :key="item[0]" :id="item[0]+(layer?'-'+layer:'')+(index?'-'+index:'')">{{item[1]?.value}}</span>
-      <span v-for="item in values" :key="item[0]" :id="item[0]+'-obj'+(layer?'-'+layer:'')+(index?'-'+index:'')">{{strObj____(item[1]?.value)}}</span>
+      <span v-for="item in values" :key="item[0]" :id="item[0]+(layer?'-'+layer:'')+(index?'-'+index:'')">{{getValue__(item[1])}}</span>
+      <span v-for="item in values" :key="item[0]" :id="item[0]+'-obj'+(layer?'-'+layer:'')+(index?'-'+index:'')">{{getStrValue__(item[1])}}</span>
       <span v-for="item in events" :id="item[0]+(layer?'-'+layer:'')+(index?'-'+index:'')" @click="item[1](eventProps[item[0]])"></span>
-      <span :id="'setValue'+(layer?'-'+layer:'')+(index?'-'+index:'')" @click="setServiceValue(eventProps['setValue'])"></span>
+      <span :id="'setValue'+(layer?'-'+layer:'')+(index?'-'+index:'')" @click="setPolyValue(eventProps['setPolyValue'])"></span>
+      <span  :id="'bondLength'+(layer?'-'+layer:'')+(index?'-'+index:'')">{{bondLength}}</span>
+      <span  :id="'frozen'+(layer?'-'+layer:'')+(index?'-'+index:'')">{{frozen}}</span>
       <slot></slot>
     </div>
     `,
@@ -118,7 +130,7 @@ export function getCompo<T>(
  * @param {...TestUnit<any>[]} testUnits
  * @returns
  */
-export function getCompoNested(...testUnits: TestUnit<any>[]) {
+export function getCompoNested(...units: typeof mockUnit[]) {
   return defineComponent({
     name: "mapping-compo",
     props: ["index"],
@@ -129,12 +141,12 @@ export function getCompoNested(...testUnits: TestUnit<any>[]) {
     `,
     computed: {
       compo() {
-        const unit = testUnits[(this as any).index];
+        const unit = units[(this as any).index];
         return unit
           ? getCompo(unit, (this as any).index)
           : (this as any).index
           ? null
-          : getCompo(testUnits[0]);
+          : getCompo(units[0]);
       },
     },
   });
@@ -147,7 +159,7 @@ export function getCompoNested(...testUnits: TestUnit<any>[]) {
  * @interface UnitMapping
  */
 export interface UnitMapping {
-  unit: TestUnit<any>;
+  unit: typeof mockUnit;
   children?: UnitMapping[];
 }
 

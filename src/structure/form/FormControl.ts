@@ -1,6 +1,6 @@
-import { computed, Ref, ref, watch } from "vue";
+import { computed, Ref, ref } from "vue";
 import Schema, { FieldErrorList, Rules } from "async-validator";
-import { defineModule } from "vue-injection-helper";
+import { definePoly } from "vue-poly";
 /**
  * form control structure
  *
@@ -39,7 +39,8 @@ export default function FormControl<T>(
     });
   };
   const focused = computed(() => focusedKeyList.value.length > 0);
-  const aggregation = {
+  return definePoly({
+    id: token || "__logic-form-control",
     model,
     rules,
     touched,
@@ -51,7 +52,5 @@ export default function FormControl<T>(
     validator,
     touch,
     validate,
-  };
-  defineModule(aggregation, "__logic-form-control", token);
-  return aggregation;
+  });
 }

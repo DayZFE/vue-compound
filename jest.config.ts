@@ -137,12 +137,13 @@ export default {
   // testLocationInResults: false,
 
   // The glob patterns Jest uses to detect test files
-  testMatch: ["**/__tests__/**/*.[jt]s?(x)", "**/?(*.)+(spec|test).[tj]s?(x)"],
+  testMatch: [
+    "**/__tests__/**/*.[jt]s?(x)",
+    "**/src/**/?(*.)+(spec|test).[tj]s?(x)",
+  ],
 
   // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
-  // testPathIgnorePatterns: [
-  //   "/node_modules/"
-  // ],
+  testPathIgnorePatterns: ["/node_modules/", "/esm/"],
 
   // The regexp pattern or array of patterns that Jest uses to detect test files
   // testRegex: ["**/(.+)\\.spec\\.(jsx?|tsx?)$"],
@@ -167,7 +168,7 @@ export default {
   // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
   // transformIgnorePatterns: ["/node_modules/", "\\.pnp\\.[^\\/]+$"],
   transformIgnorePatterns: [
-    "<rootDir>/node_modules/(?!(lodash-es|vue-injection-helper|async-validator|lodash))",
+    "<rootDir>/node_modules/(?!(lodash-es|vue-poly|async-validator|lodash))",
   ],
 
   // An array of regexp pattern strings that are matched against all modules before the module loader will automatically return a mock for them

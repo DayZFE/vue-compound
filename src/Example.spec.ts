@@ -2,17 +2,16 @@ import { mount } from "@vue/test-utils";
 import {
   checkValue,
   getCompo,
-  TestUnit,
+  getUnit,
   triggerEvent,
 } from "./ServiceTestUtils";
-import ExampleService from "./ExampleService";
+import ExampleFormula from "./ExampleFormula";
 
-const unit = new TestUnit(ExampleService);
-unit.eventPropsList = { changeTest: null };
+const unit = getUnit(ExampleFormula, [], {});
+let mockCompo = getCompo(unit);
+let wrapper = mount(mockCompo);
 
-describe("ExampleService", () => {
-  let mockCompo = getCompo(unit);
-  let wrapper = mount(mockCompo);
+describe("ExampleFormula", () => {
   test("is a Vue instance", () => {
     expect(wrapper.exists()).toBeTruthy();
   });
@@ -24,7 +23,7 @@ describe("ExampleService", () => {
     expect(checkValue(wrapper, "test")).toBe("new test");
   });
   test("changeTest will change test ref with certain prop", async () => {
-    unit.eventPropsList.changeTest = "another test";
+    unit.eventProps.changeTest = "another test";
     await triggerEvent(wrapper, "changeTest");
     expect(checkValue(wrapper, "test")).toBe("another test");
   });

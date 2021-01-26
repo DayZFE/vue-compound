@@ -2,18 +2,16 @@ import { mount } from "@vue/test-utils";
 import {
   checkValue,
   getCompoNested,
-  TestUnit,
+  getUnit,
   triggerEvent,
+  wait,
 } from "./ServiceTestUtils";
-import { RootService, LeafService } from "./ExampleNestedService";
+import { RootFormula, LeafFormula } from "./ExampleNestedFormula";
 
-const rootUnit = new TestUnit(RootService);
-rootUnit.eventPropsList = { changeTest: null };
+const rootUnit = getUnit(RootFormula, [], {});
+const leafUnit = getUnit(LeafFormula, [], { changeTest: null });
 
-const leafUnit = new TestUnit(LeafService);
-leafUnit.eventPropsList = { changeTest: null };
-
-describe("ExampleService", () => {
+describe("ExampleFormula", () => {
   const compoMap = getCompoNested(rootUnit, leafUnit);
   let wrapper = mount(compoMap);
   test("is a Vue instance", () => {
@@ -25,5 +23,9 @@ describe("ExampleService", () => {
   test("trigger leaf will set test value to 'new test'", async () => {
     await triggerEvent(wrapper, "changeTest");
     expect(checkValue(wrapper, "test-1")).toBe("new test");
+  });
+  test("linked 2 bond", async () => {
+    await wait(2);
+    expect(checkValue(wrapper, "bondLength")).toBe("2");
   });
 });
