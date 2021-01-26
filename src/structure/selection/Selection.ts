@@ -1,5 +1,5 @@
 import { isRef, ref, Ref, unref, watch } from "vue";
-import { defineModule } from "vue-injection-helper";
+import { definePoly } from "vue-poly";
 import { TrackBy, TrackingKey } from "./types";
 
 
@@ -67,14 +67,12 @@ export function Selection<T>(
     selectedKeys.value = dataSource.value.map(trackBy);
   }
 
-  const aggregation = {
+  return definePoly({
+    id: '__logic-selection',
     selectedKeys,
     select,
     deselect,
     isSelected,
     selectAll
-  }
-
-  defineModule(aggregation, '__logic-selection');
-  return aggregation;
+  });
 }
