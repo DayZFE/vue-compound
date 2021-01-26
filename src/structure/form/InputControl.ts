@@ -50,8 +50,7 @@ export default function InputControl(defaultValue?: any, token?: string) {
       (el: any) => el !== keyList.join("-")
     );
   };
-
-  return definePoly({
+  const poly = definePoly({
     id: "__form-input",
     ...partial,
     focused,
@@ -59,4 +58,5 @@ export default function InputControl(defaultValue?: any, token?: string) {
     blur,
     errors,
   });
+  return poly;
 }
