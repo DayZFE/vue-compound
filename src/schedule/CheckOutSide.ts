@@ -1,19 +1,34 @@
-import { ref, watch } from "vue";
+import { onUnmounted, ref } from "vue";
 import { cataly } from "vue-poly";
 import FromEvent from "./FromEvent";
 
 const cataFromEvent = cataly(FromEvent);
-function checkOutSide(fromEvent: typeof cataFromEvent, cb?: () => void) {
-  const { currentEvent, currentNode } = fromEvent;
+
+/**
+ * check out that if some event hppend out side of certian event
+ *
+ * @export
+ * @param {typeof cataFromEvent} fromEvent
+ * @param {() => void} [cb]
+ * @returns
+ */
+export default function checkOutSide(
+  fromEvent: typeof cataFromEvent,
+  cb?: () => void
+) {
   const ifOutside = ref<boolean>(false);
-  watch([currentEvent, currentNode], ([event, node]) => {
-    if (!event || !node) return;
-    if (!node.contains(event.target as any)) {
+  const handleDocEvent = (e: Event) => {
+    if (!fromEvent.currentNode.value) return;
+    if (!fromEvent.currentNode.value.contains(e.target as any)) {
       if (cb) cb();
       ifOutside.value = true;
     } else {
       ifOutside.value = false;
     }
+  };
+  document.addEventListener(fromEvent.eventName, handleDocEvent);
+  onUnmounted(() => {
+    document.removeEventListener(fromEvent.eventName, handleDocEvent);
   });
   return ifOutside;
 }

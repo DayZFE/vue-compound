@@ -1,5 +1,5 @@
 import { ref } from "vue";
-import { bond, definePoly } from "vue-poly";
+import { bond } from "vue-poly";
 import { ValidateError } from "async-validator";
 
 /**

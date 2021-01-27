@@ -45,5 +45,7 @@ export default function FromEvent(
     remove,
     currentEvent,
     currentNode,
+    eventName,
+    domRef,
   };
 }
