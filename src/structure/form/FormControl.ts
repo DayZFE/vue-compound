@@ -41,7 +41,7 @@ export default function FormControl<T>(
   const focused = computed(() => focusedKeyList.value.length > 0);
   return definePoly({
     id: token || Symbol(),
-    innerId: "__logic-form-control",
+    logicId: "__logic-form-control",
     through: true,
     model,
     rules,

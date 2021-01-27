@@ -28,7 +28,7 @@ export default function FormItemControl(keyList: string[], defaultValue?: any) {
     partial.model.value = defaultValue;
   }
   return definePoly({
-    id: "__logic-form-item-control",
+    logicId: "__logic-form-item-control",
     keyList,
     ...partial,
     errors,

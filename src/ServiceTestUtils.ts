@@ -87,12 +87,10 @@ export function getCompo<T>(
       }
       const bondLength = ref(0);
       const frozen = ref(false);
-      if (poly.id) {
-        watchPoly(poly, (res) => {
-          bondLength.value = res.bondList.length;
-          frozen.value = res.frozen;
-        });
-      }
+      watchPoly(poly, (res) => {
+        bondLength.value = res.bondList.length;
+        frozen.value = res.frozen;
+      });
       const setPolyValue = (prop: { queryPath: QueryPath; value: any }) => {
         bondSet(poly, prop.queryPath, prop.value);
       };

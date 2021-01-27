@@ -1,5 +1,5 @@
 import { ref } from "vue";
-import { bond } from "vue-poly";
+import { bond, definePoly } from "vue-poly";
 import { ValidateError } from "async-validator";
 
 /**
@@ -46,12 +46,12 @@ export default function InputControl(defaultValue?: any) {
       (el: any) => el !== keyList.join("-")
     );
   };
-  const poly = {
+  return definePoly({
+    logicId: "__logic-input-control",
     ...partial,
     focused,
     focus,
     blur,
     errors,
-  };
-  return poly;
+  });
 }
