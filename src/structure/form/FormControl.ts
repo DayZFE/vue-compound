@@ -1,6 +1,6 @@
 import { computed, Ref, ref } from "vue";
 import Schema, { FieldErrorList, Rules } from "async-validator";
-import { definePoly } from "vue-poly";
+import { definePoly, PolyID } from "vue-poly";
 /**
  * form control structure
  *
@@ -14,7 +14,7 @@ import { definePoly } from "vue-poly";
 export default function FormControl<T>(
   model: Ref<T>,
   rules?: Ref<Rules>,
-  token: string = ""
+  token?: PolyID
 ) {
   const touched = ref<boolean>(false);
   const focusedKeyList = ref<string[]>([]);
@@ -40,8 +40,9 @@ export default function FormControl<T>(
   };
   const focused = computed(() => focusedKeyList.value.length > 0);
   return definePoly({
-    id: Symbol(),
+    id: token || Symbol(),
     innerId: "__logic-form-control",
+    through: true,
     model,
     rules,
     touched,

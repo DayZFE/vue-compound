@@ -46,13 +46,12 @@ export default function InputControl(defaultValue?: any) {
       (el: any) => el !== keyList.join("-")
     );
   };
-  const poly = definePoly({
-    id: "__form-input",
+  const poly = {
     ...partial,
     focused,
     focus,
     blur,
     errors,
-  });
+  };
   return poly;
 }
