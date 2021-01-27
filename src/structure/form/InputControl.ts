@@ -1,4 +1,4 @@
-import { ref, watch } from "vue";
+import { ref } from "vue";
 import { bond, definePoly } from "vue-poly";
 import { ValidateError } from "async-validator";
 
@@ -10,8 +10,8 @@ import { ValidateError } from "async-validator";
  * @param {string} [token]
  * @returns
  */
-export default function InputControl(defaultValue?: any, token?: string) {
-  const usedToken = token || "__logic-form-control";
+export default function InputControl(defaultValue?: any) {
+  const token = "__logic-form-control";
   const keyList = bond("__logic-form-item-control", ["keyList"], []);
   const errors = bond(
     "__logic-form-item-control",
@@ -19,15 +19,11 @@ export default function InputControl(defaultValue?: any, token?: string) {
     ref<ValidateError[]>([])
   );
   const partial = {
-    model: bond(usedToken, ["model", "value", ...keyList], ref<any>(null)),
-    disabled: bond(usedToken, ["disabled", "value"], ref(false)),
-    touched: bond(usedToken, ["touched", "value"], ref(false)),
-    touch: bond(usedToken, "touch", () => {}),
-    focusedKeyList: bond(
-      usedToken,
-      ["focusedKeyList", "value"],
-      ref<string[]>([])
-    ),
+    model: bond(token, ["model", "value", ...keyList], ref<any>(null)),
+    disabled: bond(token, ["disabled", "value"], ref(false)),
+    touched: bond(token, ["touched", "value"], ref(false)),
+    touch: bond(token, "touch", () => {}),
+    focusedKeyList: bond(token, ["focusedKeyList", "value"], ref<string[]>([])),
   };
   // default value is superior than all
   if (defaultValue !== undefined) {
