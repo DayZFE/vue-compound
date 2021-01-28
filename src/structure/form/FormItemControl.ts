@@ -12,20 +12,12 @@ import { definePoly, bond, bondGet } from "vue-poly";
  * @param {string} [token]
  * @returns
  */
-export default function FormItemControl(
-  keyList: string[],
-  defaultValue?: any,
-  token?: string
-) {
-  const usedToken = token || "__logic-form-control";
+export default function FormItemControl(keyList: string[], defaultValue?: any) {
+  const token = "__logic-form-control";
   const partial = {
-    errorsList: bond(
-      usedToken,
-      ["errorList", "value"],
-      ref<FieldErrorList>({})
-    ),
-    touched: bond(usedToken, ["touched", "value"], ref(false)),
-    model: bond(usedToken, ["model", "value", ...keyList], ref<any>(null)),
+    errorsList: bond(token, ["errorList", "value"], ref<FieldErrorList>({})),
+    touched: bond(token, ["touched", "value"], ref(false)),
+    model: bond(token, ["model", "value", ...keyList], ref<any>(null)),
   };
   // need to handle all the undefined
   const errors = computed(
@@ -36,7 +28,7 @@ export default function FormItemControl(
     partial.model.value = defaultValue;
   }
   return definePoly({
-    id: "__logic-form-item-control",
+    logicId: "__logic-form-item-control",
     keyList,
     ...partial,
     errors,

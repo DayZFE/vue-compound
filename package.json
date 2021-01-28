@@ -1,6 +1,6 @@
 {
   "name": "vue-logic",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "plightfield",
   "description": "🎁🎁🎁all the logic problem will be sovled🎁🎁🎁",
   "license": "MIT",
@@ -18,7 +18,7 @@
     "lodash": "^4.17.20",
     "vue": "^3.0.5",
     "vue-injection-helper": "^1.1.8",
-    "vue-poly": "^1.1.1"
+    "vue-poly": "^1.1.4"
   },
   "devDependencies": {
     "@babel/core": "^7.12.10",
