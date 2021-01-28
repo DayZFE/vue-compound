@@ -1,5 +1,5 @@
 import { computed, Ref, shallowRef } from "vue";
-import { defineModule } from "vue-injection-helper";
+import { definePoly } from "vue-poly";
 import { Selection, TrackBy, TrackingKey } from "../selection";
 
 /**
@@ -46,15 +46,13 @@ export function Transfer<T>(
     }
   };
 
-  const aggregation = {
+  return definePoly({
+    id: '__logic-transfer',
     leftItems,
     rightItems,
-    addTo,
     left,
-    right
-  }
-  defineModule(aggregation, '__logic-transfer');
-
-  return aggregation;
+    right,
+    addTo,
+  });
 }
 
